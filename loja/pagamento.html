@@ -21,6 +21,9 @@
         div {
             margin-bottom: 16px;
         }
+        p {
+          color: blue;
+        }
         button {
             cursor: pointer;
             border: none;
@@ -29,6 +32,10 @@
             padding: 4px;
             margin-left: 8px;
             background-color:  #012622;
+        }
+        #boletoInfo,
+        #pixInfo {
+            display: none;
         }
     </style>
 </head>
@@ -68,6 +75,15 @@
             <span class="error" id="securityCodeError"></span>
           </div>
         </div>
+        <div id="boletoInfo">
+          <p id="boletoNumber"></p>
+        </div>
+  
+   
+        <div id="pixInfo">
+            <p id="pixCode"></p>
+        </div>
+
         <button type="submit">Confirmar Pagamento</button>
       </form>
       
@@ -96,13 +112,19 @@
                 creditCardFields.style.display = 'none';
 
                 if (method === 'boleto') {
-                  var boletoNumber = generateRandomBoletoNumber();
-                  paymentInfo.textContent = 'Número do boleto: ' + boletoNumber;
+                    document.getElementById('boletoInfo').style.display = 'block';
+                    document.getElementById('boletoNumber').textContent = 'Número do boleto: ' + generateRandomBoletoNumber();
+
+                    
+                    document.getElementById('pixCode').textContent = '';
                 } else if (method === 'pix') {
-                  var pixCode = generateRandomPixCode();
-                  paymentInfo.textContent = 'Código PIX: ' + pixCode;
+                    document.getElementById('pixInfo').style.display = 'block';
+                    document.getElementById('pixCode').textContent = 'Código PIX: ' + generateRandomPixCode();
+
+                    
+                    document.getElementById('boletoNumber').textContent = '';
                 }
-              }
+            }
             });
  
        document.getElementById('paymentForm').addEventListener('submit', function(event) {
