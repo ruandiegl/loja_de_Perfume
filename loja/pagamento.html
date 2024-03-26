@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        form {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #D4DFC7;
+        }
+        div {
+            margin-bottom: 16px;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 4px;
+            margin-left: 8px;
+            background-color:  #012622;
+        }
+    </style>
+</head>
+<body>
+    <form id="paymentForm">
+        <div>
+          <label for="paymentMethod">Método de Pagamento:</label>
+          <select id="paymentMethod" name="paymentMethod">
+            <option value="creditCard">Cartão de Crédito</option>
+            <option value="boleto">Boleto</option>
+            <option value="pix">Pix</option>
+          </select>
+        </div>
+        <div id="creditCardFields">
+          <div>
+            <label for="cardType">Bandeira do Cartão:</label>
+            <select id="cardType" name="cardType">
+              <option value="visa">Visa</option>
+              <option value="mastercard">Mastercard</option>
+              <option value="amex">American Express</option>
+            </select>
+            <span class="error" id="cardTypeError"></span>
+          </div>
+          <div>
+            <label for="cardholderName">Nome do Titular:</label>
+            <input type="text" id="cardholderName" name="cardholderName" maxlength="19" pattern="[a-zA-Z\s]+" required>
+            <span class="error" id="cardholderNameError"></span>
+          </div>
+          <div>
+            <label for="cardNumber">Número do Cartão:</label>
+            <input type="text" id="cardNumber" name="cardNumber" maxlength="16" pattern="[0-9]{16}" required>
+            <span class="error" id="cardNumberError"></span>
+          </div>
+          <div>
+            <label for="securityCode">Código de Segurança:</label>
+            <input type="text" id="securityCode" name="securityCode" maxlength="3" pattern="[0-9]{3}" required>
+            <span class="error" id="securityCodeError"></span>
+          </div>
+        </div>
+        <button type="submit">Confirmar Pagamento</button>
+      </form>
+      
+      <script>
+       document.getElementById('paymentMethod').addEventListener('change', function() {
+  var method = this.value;
+  var creditCardFields = document.getElementById('creditCardFields');
+
+  if (method === 'creditCard') {
+    creditCardFields.style.display = 'block';
+  } else {
+    creditCardFields.style.display = 'none';
+  }
+});
+
+document.getElementById('paymentForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  var paymentMethod = document.getElementById('paymentMethod').value;
+
+  if (paymentMethod === 'creditCard') {
+    var cardType = document.getElementById('cardType').value;
+    var cardNumber = document.getElementById('cardNumber').value;
+    var securityCode = document.getElementById('securityCode').value;
+    var cardholderName = document.getElementById('cardholderName').value;
+
+    if (!validateCardNumber(cardType, cardNumber)) {
+      document.getElementById('cardNumberError').textContent = 'Número do cartão inválido!';
+      return;
+    }
+  } 
+  alert('Pagamento confirmado via ' + paymentMethod + '!');
+});
+
+function validateCardNumber(cardType, cardNumber) {
+  var cardRegex;
+  switch (cardType) {
+    case 'visa':
+      cardRegex = /^(?:4[0-9]{15})$/;
+      break;
+    case 'mastercard':
+      cardRegex = /^(?:5[1-5][0-9]{14})$/;
+      break;
+    case 'amex':
+      cardRegex = /^(?:3[47][0-9]{13})$/;
+      break;
+    default:
+      return false;
+  }
+  return cardRegex.test(cardNumber);
+}
+
+      </script>
+</body>
+</html>

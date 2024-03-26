@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url(img/pexels-mart-production-8450252.jpg);
+    background-position: left;
+    background-size: cover;
+}
+.login-box {
+    height: 400px;
+    width: 300px;
+    border-radius: 16px;
+    box-shadow: 2px 1px 16px rgba(0, 0, 0, 0.438);
+    background-color: transparent;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+main {
+    margin: 10px 0px 10px 0px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+}
+input.form-box{
+    
+    height: 24px;
+    width: 200px;
+    border: none;
+    border-radius: 16px;
+    text-indent: 8px;
+    box-shadow: 2px 1px 16px rgba(0, 0, 0, 0.26);;
+}
+input:focus {
+    outline: none;
+}
+.button {
+    width: 100px;
+    border: none;
+    border-radius: 16px;
+    padding: 8px;
+    transition: 0.5s;
+    cursor: pointer;
+    background-color: #012622;
+    color: white;
+    margin-top: 16px;
+}
+.button:hover {
+    background-color: #568259; 
+}
+footer{
+    margin-top: 32px;
+}
+a{
+    text-decoration: none;
+    color: #012622;
+    transition: 0.5s;
+}
+a:hover{
+    color: #568259;
+}
+.error-message {
+    font-size: 12px;
+    color: red;
+    height: 1em;
+    max-width: 200px;
+    transition: 0.5s;
+}
+.inputForm {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    position: relative;
+}

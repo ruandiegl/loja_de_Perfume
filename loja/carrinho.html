@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #D4DFC7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #lista-carrinho {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            
+        }
+
+        #lista-carrinho li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 4px;
+            margin-left: 8px;
+            background-color: rgba(255, 0, 0, 0.952);
+            
+            
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        input[type="number"] {
+            width: 50px;
+        }
+
+        #total-carrinho {
+            font-weight: bold;
+            
+        }
+        .cep{
+            display: flex;
+            align-items: center;
+        }
+        
+        .freteButton {
+            padding: 6px;
+            border-radius: 8px;
+            background-color: #012622;
+        }
+        .freteButton:hover {
+            background-color: #568259;
+        }
+        .freteButton:active {
+            background-color: #5682598f;
+        }
+
+        .pagamento {
+            padding: 6px;
+            border-radius: 8px;
+            background-color: #012622;
+            margin-top: 24px;  
+        }
+        .pagamento:hover {
+            background-color: #568259;
+        }
+        .pagamento:active {
+        background-color: #5682598f;
+            
+        }
+        
+    </style>
+</head>
+<body>
+    <form action="/loja/pagamento.html" onsubmit="return validarSubmit()">
+        <h1>Seu Carrinho de Compras</h1>
+        <ul id="lista-carrinho"></ul>
+        <p>Total: R$ <span id="total-carrinho">0.00</span></p>
+        
+        <!-- Adicionando campo de entrada para o CEP -->
+        <div class="cep">
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep">
+            <button class="freteButton" type="button" onclick="calcularFrete()">Calcular Frete</button>
+        </div>
+        <button type="submit" onsubmit="validarSubmit()"class="pagamento">Confirmar compra</button>
+    </form>
+
+    <script>
+        var svgTrash = '<svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>';
+        var carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+        var listaCarrinho = document.getElementById('lista-carrinho');
+        var totalCarrinhoElement = document.getElementById('total-carrinho');
+
+        var freteAdicionado = false; // Variável para rastrear se o frete já foi adicionado
+
+        function atualizarCarrinho() {
+            var total = 0;
+            listaCarrinho.innerHTML = '';
+
+            carrinho.forEach(function(item) {
+                var li = document.createElement('li');
+                var removerBotao = document.createElement('button');
+                removerBotao.innerHTML = svgTrash
+                removerBotao.onclick = function() {
+                    removerItem(item);
+                };
+
+                var precoItem = item.preco || 0;
+                var quantidadeItem = item.quantidade || 1;
+
+                li.textContent = item.nome + ' - R$ ' + (precoItem * quantidadeItem).toFixed(2) + ' - Quantidade: ';
+                
+                var quantidadeInput = document.createElement('input');
+                quantidadeInput.type = 'number';
+                quantidadeInput.value = quantidadeItem;
+                quantidadeInput.min = 1;
+                quantidadeInput.max = 9;
+                quantidadeInput.addEventListener('change', function() {
+                    item.quantidade = parseInt(quantidadeInput.value);
+                    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                    atualizarCarrinho();
+                });
+
+                li.appendChild(quantidadeInput);
+                li.appendChild(removerBotao);
+                listaCarrinho.appendChild(li);
+
+                total += precoItem * quantidadeItem;
+            });
+
+            totalCarrinhoElement.textContent = total.toFixed(2);
+        }
+
+        atualizarCarrinho();
+
+        function adicionarItem(nome, preco) {
+            var index = carrinho.findIndex(function(item) {
+                return item.nome === nome;
+            });
+
+            if (index !== -1) {
+                carrinho[index].quantidade++;
+            } else {
+                carrinho.push({ nome: nome, preco: preco, quantidade: 1 });
+            }
+
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            atualizarCarrinho();
+        }
+
+        var addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var nome = this.parentElement.getAttribute('data-nome');
+                var preco = parseFloat(this.parentElement.getAttribute('data-preco'));
+                adicionarItem(nome, preco);
+                alert('Item adicionado ao carrinho!');
+            });
+        });
+
+        function removerItem(item) {
+            var indice = carrinho.findIndex(function(i) {
+                return i.nome === item.nome;
+            });
+            if (indice !== -1) {
+                carrinho.splice(indice, 1);
+                localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                atualizarCarrinho();
+            }
+        }
+
+        // Função para validar o CEP com regex
+        function validarCep(cep) {
+            var regex = /^[0-9]{5}-?[0-9]{3}$/;
+            return regex.test(cep);
+        }
+
+        // Função para calcular o frete
+        function calcularFrete() {
+            var cepInput = document.getElementById('cep');
+            var cep = cepInput.value.trim();
+
+            if (validarCep(cep) && !freteAdicionado) {
+                // Adiciona 50 reais de frete ao total do carrinho
+                var totalAtual = parseFloat(totalCarrinhoElement.textContent);
+                var novoTotal = totalAtual + 50;
+                totalCarrinhoElement.textContent = novoTotal.toFixed(2);
+                freteAdicionado = true; // Define que o frete já foi adicionado
+                alert('Frete calculado com sucesso.');
+            } else if (freteAdicionado) {
+                alert('O frete já foi adicionado ao total.');
+            } else {
+                alert('CEP inválido. Por favor, insira um CEP válido.');
+            }
+        }
+        function validarSubmit() {
+            if(carrinho.length >= 1 && freteAdicionado) {
+                return true;
+            } else {
+                alert("Seu carrinho está vazio ou não informou o cep.");
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

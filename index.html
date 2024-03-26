@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-box">
+        <header>
+            <h1>Login</h1>
+        </header>
+        <main>
+            <form action="/loja/index.html" class="form" onsubmit="return validarForm()">
+
+                <div class="inputForm">
+                    <label for="iemailForm">E-mail</label>
+                    <input type="text" name="iemailForm" id="emailForm"
+                    class="form-box" placeholder="abc1234@mail.com" oninput="validarEmail(this)">
+                    <div id="emailError" class="error-message"></div>
+                </div>
+
+                <div class="inputForm">
+                    <label for="isenhaForm">Senha</label>
+                    <input type="password" name="isenhaForm" id="senhaForm" class="form-box" placeholder="*********" maxlength="8" oninput="validarSenha(this)">
+                    <div id="senhaError" class="error-message"></div>
+                </div>
+
+                <input type="submit" value="Entrar" class="button">
+                <p id="mensagemSenha" style="color:red;"></p>
+            </form>
+        </main>
+        <footer>
+            <p> 
+                Não tem conta? <a href="cadastro/index.html"><Strong>Cadastre-se</Strong></a>
+            </p>
+        </footer>
+    </div>
+</body>
+<script src="index.js"></script>
+</html>
