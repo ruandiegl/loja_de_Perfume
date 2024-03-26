@@ -71,25 +71,39 @@
         <button type="submit">Confirmar Pagamento</button>
       </form>
       
+      <div id="paymentInfo"></div>
+      
       <script>
-        document.getElementById('paymentMethod').addEventListener('change', function() {
-           var method = this.value;
-           var creditCardFields = document.getElementById('creditCardFields');
- 
-           if (method === 'creditCard') {
-             creditCardFields.style.display = 'block';
-           } else {
-             creditCardFields.style.display = 'none';
-           }
- 
-           if (method === 'boleto') {
-             var boletoNumber = generateRandomBoletoNumber();
-             document.getElementById('paymentInfo').textContent = 'Número do boleto: ' + boletoNumber;
-           } else if (method === 'pix') {
-             var pixCode = generateRandomPixCode();
-             document.getElementById('paymentInfo').textContent = 'Código PIX: ' + pixCode;
-           }
-         });
+        function generateRandomBoletoNumber() {
+              return Math.floor(Math.random() * 10000000000000000000).toString();
+          }
+  
+        function generateRandomPixCode() {
+              return Math.floor(Math.random() * 100000000000000000000000).toString();
+          }
+          
+          document.getElementById('paymentMethod').addEventListener('change', function() {
+              var method = this.value;
+              var creditCardFields = document.getElementById('creditCardFields');
+              var paymentInfo = document.getElementById('paymentInfo');
+
+              // Limpar o conteúdo de paymentInfo
+              paymentInfo.textContent = '';
+
+              if (method === 'creditCard') {
+                creditCardFields.style.display = 'block';
+              } else {
+                creditCardFields.style.display = 'none';
+
+                if (method === 'boleto') {
+                  var boletoNumber = generateRandomBoletoNumber();
+                  paymentInfo.textContent = 'Número do boleto: ' + boletoNumber;
+                } else if (method === 'pix') {
+                  var pixCode = generateRandomPixCode();
+                  paymentInfo.textContent = 'Código PIX: ' + pixCode;
+                }
+              }
+            });
  
        document.getElementById('paymentForm').addEventListener('submit', function(event) {
          event.preventDefault();
@@ -127,14 +141,6 @@
          }
          return cardRegex.test(cardNumber);
        }
- 
-       function generateRandomBoletoNumber() {
-             return Math.floor(Math.random() * 10000000000000000000).toString();
-         }
- 
-       function generateRandomPixCode() {
-             return Math.floor(Math.random() * 100000000000000000000000).toString();
-         }
  
        </script>
 </body>
